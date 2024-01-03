@@ -2,6 +2,7 @@ import React from "react";
 
 function SingleProductCard({ product, redirectToDetail }) {
   const { images, price, name, category } = product;
+  console.log(product);
 
   return (
     <div>
@@ -11,7 +12,7 @@ function SingleProductCard({ product, redirectToDetail }) {
             src={images[0]}
             alt={`loading: ${name}`}
             className="border transform transition duration-500 hover:scale-105 hover:cursor-pointer"
-            onClick={() => redirectToDetail(product.id)}
+            onClick={() => redirectToDetail(product._id)}
           />
         </div>
 
@@ -19,7 +20,7 @@ function SingleProductCard({ product, redirectToDetail }) {
           <p className="text-xs">from ₹{price}</p>
           <h3
             className="text-lg hover:cursor-pointer"
-            onClick={() => redirectToDetail(product.id)}
+            onClick={() => redirectToDetail(product._id)}
           >
             {name}
           </h3>

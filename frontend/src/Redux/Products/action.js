@@ -1,25 +1,25 @@
+import { api_url } from '../../../config';
 import { storeDB, query, collection, getDoc, getDocs, doc, updateDoc, arrayUnion, arrayRemove, writeBatch } from '../../Services/firebaseConfig'
 import { DATA_GET_REQUEST, DATA_GET_SUCCESS, DATA_GET_FAILURE, CART_GET_REQUEST, CART_GET_SUCCESS, CART_GET_FAILURE, WISHLIST_GET_REQUEST, WISHLIST_GET_SUCCESS, WISHLIST_GET_FAILURE } from './actionTypes';
-
+import axios from "axios"
 export const getDataRequest = () => ({ type: DATA_GET_REQUEST });
 export const getDataSuccess = (data) => ({ type: DATA_GET_SUCCESS, payload: data });
 export const getDataFailure = (error) => ({ type: DATA_GET_FAILURE, payload: error });
 
-
+console.log(api_url);
 export const fetchData = () => async (dispatch) => {
     dispatch(getDataRequest());
     try {
-        let tempData = [];
-        const q = query(collection(storeDB, "products"));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((product) => {
-            tempData.push({ ...product.data(), id: product.id });
-        });
-        dispatch(getDataSuccess(tempData));
+        const response = await axios.get(
+            `${api_url}/products`
+        );
+        dispatch(getDataSuccess(response.data.data));
+
     } catch (error) {
         dispatch(getDataFailure(error));
     }
 };
+
 
 // Do not use in cart page.
 export const addToCart = (productId, userId) => async (dispatch) => {

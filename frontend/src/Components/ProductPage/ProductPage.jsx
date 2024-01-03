@@ -46,7 +46,7 @@ const ProductPage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-5">
         {categoryData.map((product) => (
           <SingleProductCard
-            key={product.id}
+            key={product._id}
             product={product}
             redirectToDetail={redirectToDetail}
           />

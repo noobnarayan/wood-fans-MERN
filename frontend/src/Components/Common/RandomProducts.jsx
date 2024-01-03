@@ -10,6 +10,7 @@ function RandomProducts({ selected }) {
   const navigate = useNavigate();
   const [currentProducts, setCurrentProducts] = useState([]);
   const { productData, loading } = useSelector((store) => store.dataReducer);
+
   const redirectToDetail = (id) => {
     navigate(`product/${id}`);
   };
@@ -26,7 +27,7 @@ function RandomProducts({ selected }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
         {currentProducts?.map((product) => (
           <SingleProductCard
-            key={product.id}
+            key={product._id}
             product={product}
             redirectToDetail={redirectToDetail}
           />
