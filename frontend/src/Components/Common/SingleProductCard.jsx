@@ -2,7 +2,6 @@ import React from "react";
 
 function SingleProductCard({ product, redirectToDetail }) {
   const { images, price, name, category } = product;
-  console.log(product);
 
   return (
     <div>

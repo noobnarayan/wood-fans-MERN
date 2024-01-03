@@ -25,6 +25,8 @@ import { useState } from "react";
 import PopupMessage from "../Components/Common/PopupMessage";
 import { useDispatch } from "react-redux";
 import { addToCart, fetchCartData } from "../Redux/Products/action";
+import axios from "axios";
+import { api_url } from "../../config";
 const sizeArray = ["Big", "Average", "Small"];
 const quantityArray = [1, 2, 3, 4];
 
@@ -60,17 +62,12 @@ const SingleProduct = () => {
   useEffect(() => {
     const fetchProductData = async () => {
       try {
-        const productDocRef = doc(storeDB, "products", productId);
-        const productDocSnapshot = await getDoc(productDocRef);
-        
-        if (productDocSnapshot.exists()) {
-          setProductData({ id: productId, ...productDocSnapshot.data()});
-          setImage(productDocSnapshot.data().images);
-          setMainImage(productDocSnapshot.data().images[0]);
-         
-        } else {
-          console.log("No such document!");
-        }
+        const res = await axios.get(`${api_url}/products/${productId}`);
+
+        const data = res.data.data;
+        setProductData({ id: productId, ...data });
+        setImage(data.images);
+        setMainImage(data.images[0]);
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -186,7 +183,6 @@ const SingleProduct = () => {
           {/* Filters */}
           <PopUpSelector />
           <div className="grid grid-cols-2 mt-5 gap-2 text-xs sm:text-base">
-
             <DropDwonSelector data={sizeArray} purpose={"Select Size"} />
             <DropDwonSelector
               data={quantityArray}
