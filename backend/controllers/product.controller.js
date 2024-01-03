@@ -16,8 +16,20 @@ const getAllProducts = asyncHandler(async (req, res) => {
         if (error instanceof ApiError) {
             throw error;
         } else {
-            throw new ApiError(500, "Internal Server Error");
+            throw new ApiError(500, `Internal Server Error: ${error}`);
         }
+    }
+});
+
+const getSingleProduct = asyncHandler(async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            throw new ApiError(404, "Product not found");
+        }
+        res.status(200).json(new ApiResponse(200, product, "Get product successful"));
+    } catch (error) {
+        throw new ApiError(500, `Internal Server Error: ${error}`);
     }
 });
 
@@ -25,5 +37,6 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
 module.exports = {
     getAllProducts,
+    getSingleProduct
 };
 
