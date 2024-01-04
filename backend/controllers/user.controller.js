@@ -160,29 +160,25 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     }
 })
 
-const changeCurrentPassword = asyncHandler(async (req, res) => {
-    const { oldPassword, newPassword } = req.body
-
-    const user = await User.findById(req.user?._id)
-
-    const isPasswordValid = await user.isPasswordCorrect(oldPassword)
-
-    if (!isPasswordValid) {
-        throw new ApiError(400, "Invalid password")
-    }
-
-    user.password = newPassword
-    await user.save({ validateBeforeSave: false })
-
-    return res.status(200)
-        .json(new ApiResponse(200, {}, "Password changed successfully"))
-
-})
-
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(new ApiResponse(200, req.user, "Current user fetch successfull"))
+})
+
+const addToCart = asyncHandler(async (req, res) => {
+    const { id, quantity } = req.body
+
+    try {
+        const user = await User.findById(req.user._id)
+        user.cartItems.push({ id, quantity })
+
+        await user.save()
+
+        res.status(200).json(new ApiResponse(200, {}, 'Item added to cart successfully'))
+    } catch (error) {
+        throw new ApiError(500, `An error occurred while adding the item to the cart: ${error}`)
+    }
 })
 
 
@@ -191,6 +187,6 @@ module.exports = {
     loginUser,
     logOutUser,
     refreshAccessToken,
-    changeCurrentPassword,
-    getCurrentUser
+    getCurrentUser,
+    addToCart
 }
