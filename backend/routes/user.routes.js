@@ -15,6 +15,9 @@ router.route("/refresh-token").post(refreshAccessToken);
 router.route("/get-user").get(verifyJWT, getCurrentUser);
 router.route("/add-to-cart").post(verifyJWT, addToCart);
 router.route("/remove-from-cart").post(verifyJWT, removeFromCart);
+router.route("/increase-quantity").post(verifyJWT, increaseQuantity);
+router.route("/decrease-quantity").post(verifyJWT, decreaseQuantity);
 router.route("/get-cart-data").get(verifyJWT, getUserCartData);
+
 
 module.exports = router;

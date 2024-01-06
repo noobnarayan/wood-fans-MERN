@@ -208,6 +208,47 @@ const removeFromCart = asyncHandler(async (req, res) => {
 
 })
 
+// Increase quantity
+const increaseQuantity = asyncHandler(async (req, res) => {
+    const { id } = req.body
+
+    try {
+        const user = await User.findById(req.user._id)
+        const item = user.cartItems.find(item => item.productId == id)
+
+        if (item) {
+            item.quantity++
+            await user.save()
+            res.status(200).json(new ApiResponse(200, {}, 'Item quantity increased successfully'))
+        } else {
+            throw new ApiError(404, `Item not found in the cart`)
+        }
+    } catch (error) {
+        throw new ApiError(500, `An error occurred while increasing the item quantity: ${error}`)
+    }
+})
+
+// Decrease quantity
+const decreaseQuantity = asyncHandler(async (req, res) => {
+    const { id } = req.body
+
+    try {
+        const user = await User.findById(req.user._id)
+        const item = user.cartItems.find(item => item.productId == id)
+
+        if (item) {
+            item.quantity = Math.max(0, item.quantity - 1)
+            await user.save()
+            res.status(200).json(new ApiResponse(200, {}, 'Item quantity decreased successfully'))
+        } else {
+            throw new ApiError(404, `Item not found in the cart`)
+        }
+    } catch (error) {
+        throw new ApiError(500, `An error occurred while decreasing the item quantity: ${error}`)
+    }
+})
+
+
 
 module.exports = {
     registerUser,
@@ -217,5 +258,7 @@ module.exports = {
     getCurrentUser,
     addToCart,
     getUserCartData,
-    removeFromCart
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity
 }

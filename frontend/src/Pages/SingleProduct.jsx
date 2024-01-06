@@ -38,7 +38,6 @@ const SingleProduct = () => {
 
   useEffect(() => {
     userId.current = userData?._id;
-    console.log(userId);
   }, [userData]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
