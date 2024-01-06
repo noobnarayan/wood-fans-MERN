@@ -5,12 +5,15 @@ import { faEnvelope, faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpNewUser } from "../../Redux/Auth/action";
 import { toast } from "react-toastify";
-
+import { api_url } from "../../../config";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Signup = ({ onClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirPassword] = useState("");
   const [name, setName] = useState("");
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -28,12 +31,13 @@ const Signup = ({ onClick }) => {
     toast.error(errorMessage);
   }
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     if (!email && !name && !password) {
       toast.info("Fill all the feild.");
     }
-    dispatch(signUpNewUser(email, password, name));
+    await dispatch(signUpNewUser(email, password, name));
+    navigate("/login");
   };
 
   return (
@@ -47,8 +51,8 @@ const Signup = ({ onClick }) => {
           onChange={(e) => setName(e.target.value)}
           type="text"
           value={name}
-          error="Name and shouldn't include any special character!"
-          pattern="^[A-Za-z0-9]{3,16}$"
+          // error="Name and shouldn't include any special character!"
+          // pattern="^[A-Za-z0-9]{3,16}$"
         />
         <InputFeild
           placeholder="Email"
@@ -64,10 +68,6 @@ const Signup = ({ onClick }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
-          error={
-            "Password should be 6-15 characters and include at least 1 letter, 1 number, and 1 special character!"
-          }
-          pattern="^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,15}$"
         />
         <InputFeild
           placeholder="Confirm Password"
@@ -75,8 +75,8 @@ const Signup = ({ onClick }) => {
           onChange={(e) => setConfirPassword(e.target.value)}
           type="password"
           value={confirmpassword}
-          error="Passwords don't match!"
-          pattern={password}
+          // error="Passwords don't match!"
+          // pattern={password}
         />
 
         <Button

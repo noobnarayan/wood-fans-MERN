@@ -23,21 +23,16 @@ export const fetchData = () => async (dispatch) => {
 
 // Do not use in cart page.
 export const addToCart = (productId, userId) => async (dispatch) => {
-    try {
-        const userRef = doc(storeDB, 'users', userId);
-        const userSnap = await getDoc(userRef);
-        const userData = userSnap.data();
-        const cart = userData.cart;
-        const cartItem = cart.find(item => item.productId === productId);
+    const token = JSON.parse(localStorage.getItem("accessToken"));
+    const payload = {
+        id: productId,
+        quantity: "1"
+    }
 
-        if (cartItem) {
-            cartItem.quantity += 1;
-            await updateDoc(userRef, { cart: cart });
-        } else {
-            await updateDoc(userRef, {
-                cart: arrayUnion({ productId, quantity: 1 })
-            });
-        }
+    try {
+        const res = await axios.post(`${api_url}/users/add-to-cart`, payload, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
         dispatch(fetchCartData(userId));
     } catch (error) {
         console.log(error);

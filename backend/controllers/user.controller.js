@@ -37,7 +37,6 @@ const registerUser = asyncHandler(async (req, res) => {
         name,
         email: email.toLowerCase(),
         password,
-        username: username.toLowerCase()
     })
     const createdUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -55,7 +54,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
 
     if (!email) {
-        throw new ApiError(400, "username or email is required")
+        throw new ApiError(400, "Email is required")
 
     }
 
@@ -75,9 +74,11 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
+    const isProduction = process.env.NODE_ENV === 'production';
+
     const options = {
         httpOnly: true,
-        secure: true
+        secure: isProduction
     }
 
     return res
@@ -93,6 +94,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 "User logged In Successfully"
             )
         )
+
 })
 
 const logOutUser = asyncHandler(async (req, res) => {
@@ -161,6 +163,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+
     return res
         .status(200)
         .json(new ApiResponse(200, req.user, "Current user fetch successfull"))
@@ -171,7 +174,7 @@ const addToCart = asyncHandler(async (req, res) => {
 
     try {
         const user = await User.findById(req.user._id)
-        user.cartItems.push({ id, quantity })
+        user.cartItems.push({ product: id, quantity })
 
         await user.save()
 

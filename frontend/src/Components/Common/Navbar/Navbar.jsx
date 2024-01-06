@@ -5,47 +5,39 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import shoppingbag from "../../../assets/shoppingbag.svg";
 import Button from "../Button";
-import { fetchCartData } from "../../../Redux/Products/action";
-import { fetchUserData } from "../common";
+
+import { getUserData } from "../../../Redux/Auth/action";
 
 const Navbar = () => {
   const { cartData } = useSelector((store) => store.cartReducer);
+  const { userData } = useSelector((store) => store.authReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [userData, setUserData] = useState(null);
-  const [uid, setUid] = useState("");
 
   const [search, setSearch] = useState("");
   const [isMobileMenuActive, setMobileMenuActive] = useState(false);
   const [cartValue, setCartValue] = useState(0);
   const [authStatus, setAuthStatus] = useState(null);
-  let userName = userData?.name?.split(" ");
+  const [userName, setUserName] = useState("");
   const isMounted = useRef(true);
+
   useEffect(() => {
-    if (uid) {
+    dispatch(getUserData());
+  }, []);
+
+  useEffect(() => {
+    if (userData) {
+      const name = userData.name.split(" ")[0];
+      setUserName(name);
       setAuthStatus(true);
-      dispatch(fetchCartData(uid));
     }
-  }, [uid]);
+  }, [userData]);
 
   useEffect(() => {
     if (cartData?.length > 0) {
       setCartValue(cartData.length);
     }
   }, [cartData]);
-
-  // Firebase get user
-
-  useEffect(() => {
-    let unsubscribe;
-
-    fetchUserData(setUid, setUserData).then((unsub) => {
-      unsubscribe = unsub;
-    });
-
-    return () => unsubscribe && unsubscribe();
-  }, []);
 
   // Mobile menu and navigator functions.
   const toggleMobileMenu = () => {
@@ -143,7 +135,7 @@ const Navbar = () => {
                           className="font-medium text-sm cursor-pointer flex items-center"
                           onClick={() => setDropdownVisible(!dropdownVisible)}
                         >
-                          Hello, {userName ? userName[0] : "Loading..."}
+                          Hello, {userName ? userName : "Loading..."}
                           <i className="fa-solid fa-chevron-down ml-2"></i>{" "}
                         </p>
                         {dropdownVisible && (
@@ -329,7 +321,7 @@ const Navbar = () => {
             <div className="pt-1 pb-6">
               {authStatus ? (
                 <p className=" font-medium text-lg">
-                  Hello, {userName ? userName[0] : "Loading..."}
+                  Hello, {userName ? userName : "Loading..."}
                 </p>
               ) : (
                 <Link to="/login">

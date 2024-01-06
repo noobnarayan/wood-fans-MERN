@@ -1,19 +1,21 @@
 // Import 
 import { auth, googleProvider, storeDB, facebookProvider } from '../../Services/firebaseConfig'
-import { signInWithEmailAndPassword, signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth'
-import { collection, setDoc, doc, getDocs, getDoc } from 'firebase/firestore'
-import { FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS } from './actionType'
+import { signInWithPopup } from 'firebase/auth'
+import { collection, setDoc, doc, getDoc } from 'firebase/firestore'
+import { FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_SUCCESS, GET_USER_DATA_FAILURE, GET_USER_DATA_REQUEST, GET_USER_DATA_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS } from './actionType'
+import axios from 'axios'
+import { api_url } from "../../../config.js"
 
 // Login Action Methods
-const loginRequest = () => {
-     return { type: LOGIN_REQUEST }
+const getUserDataRequest = () => {
+     return { type: GET_USER_DATA_REQUEST }
 
 }
-const loginSuccess = (payload) => {
-     return { type: LOGIN_SUCCESS, payload }
+const getUserDataSuccess = (payload) => {
+     return { type: GET_USER_DATA_SUCCESS, payload }
 }
-const loginFailure = (payload) => {
-     return { type: LOGIN_FAILURE, payload }
+const getUserDataFailure = (payload) => {
+     return { type: GET_USER_DATA_FAILURE, payload }
 }
 
 // SignUp Action Methods
@@ -28,39 +30,41 @@ const signUpFailure = (payload) => {
      return { type: SIGN_UP_FAILURE, payload }
 }
 
-// Methods that tolk to Firebase
-
 // login with email and password 
 const loginWithEmailAndPassword = (email, password, onSuccess) => async (dispatch) => {
+     const payload = {
+          email,
+          password
+     }
      try {
-          dispatch(loginRequest())
-          await signInWithEmailAndPassword(auth, email, password);
-          dispatch(loginSuccess("Login successful."))
+          const res = await axios.post(`${api_url}/users/login`, payload);
+          const token = res.data.data.accessToken
+          localStorage.setItem("accessToken", JSON.stringify(token))
+
           onSuccess()
      } catch (error) {
-          let errorMessage = "Login failed. Please check your credentials and try again.";
+          console.log(error);
+     }
+}
+const getUserData = () => async (dispatch) => {
+     const token = JSON.parse(localStorage.getItem("accessToken"));
+     try {
+          dispatch(getUserDataRequest())
+          const res = await axios.get(`${api_url}/users/get-user`, {
+               headers: { Authorization: `Bearer ${token}` },
+          });
 
-          if (error.code === "auth/user-not-found") {
-               errorMessage = "User not found. Please register to create an account.";
-          } else if (error.code === "auth/wrong-password") {
-               errorMessage = "Incorrect password. Please try again.";
+          if (res.data) {
+               dispatch(getUserDataSuccess(res.data.data))
           }
-          dispatch(loginFailure(errorMessage))
+
+     } catch (error) {
+          console.log(`Error while fetching user data: ${error}`);
+          dispatch(getUserDataFailure(error))
      }
 }
 
-// login with Google
-// const loginWithGoogle = () => async (dispatch) => {
-//      try {
-//           dispatch(loginRequest());
-//           const result = await signInWithPopup(auth, googleProvider)
 
-//           dispatch(loginSuccess(`Welcome, ${result.user.displayName}!`))
-
-//      } catch (error) {
-//           dispatch(loginFailure(`Sign-In Error: ${error.message}`))
-//      }
-// }
 const loginWithGoogle = (onRedirect) => async (dispatch) => {
      try {
           dispatch(signUpRequest());
@@ -114,24 +118,18 @@ const loginWithFacebook = (onRedirect) => async (dispatch) => {
 
 // SignUp new user 
 const signUpNewUser = (email, password, name) => async (dispatch) => {
+     const payload = {
+          name,
+          email,
+          password
+     };
+
      try {
           dispatch(signUpRequest());
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          const userId = userCredential.user.uid;
 
-          const userDocRef = doc(storeDB, 'users', userId);
-          await setDoc(userDocRef, {
-               name,
-               email,
-               password,
-               cart: [],
-               wishlist: [],
-               orders: [],
-          });
-          const data = collection(storeDB, "users");
-          const querySnapshot = await getDoc(data);
+          const res = await axios.post(`${api_url}/users/register`, payload);
+          console.log(res);
 
-          console.log(querySnapshot)
 
           dispatch(signUpSuccess(`Welcome, ${name}!`));
      } catch (error) {
@@ -166,5 +164,6 @@ export {
      loginWithEmailAndPassword,
      loginWithFacebook,
      loginWithGoogle,
-     signUpNewUser
+     signUpNewUser,
+     getUserData
 }

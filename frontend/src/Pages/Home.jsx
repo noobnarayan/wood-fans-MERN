@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Hero from "../Components/Homepage/Hero";
 import BuyersChoice from "../Components/Homepage/BuyersChoice";
 import FactoryOrderPortfolio from "../Components/Homepage/FactoryOrderPortfolio";
@@ -8,12 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import PhotoGallery from "../Components/Homepage/PhotoGallery";
 import ContactUs from "../Components/Homepage/ContactUs";
 import ClientsReviews from "../Components/Common/ClientsReviews";
+import axios from "axios";
 function Home() {
   return (
     <div>
       <Hero />
       <div className="px-5">
-        <BuyersChoice title={"Buyers' choice"}/>
+        <BuyersChoice title={"Buyers' choice"} />
         <FactoryOrderPortfolio />
         <PhotoGallery />
         <ClientsReviews />

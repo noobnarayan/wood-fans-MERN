@@ -3,7 +3,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const app = express();
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true, // This is important.
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
