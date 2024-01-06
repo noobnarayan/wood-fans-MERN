@@ -125,45 +125,23 @@ export const adjustQuantityInCart = (productId, userId, adjustment) => async (di
 };
 
 
-export const removeFromCart = (productId, userId, wishlist) => async (dispatch) => {
+export const removeFromCart = (productId, wishlist) => async (dispatch) => {
+    const token = JSON.parse(localStorage.getItem("accessToken"));
+    const payload = { id: productId }
     try {
-        // Reference to the user's document in the database
-        const userRef = doc(storeDB, 'users', userId);
-        // Retrieve the user's data
-        const userSnapshot = await getDoc(userRef);
-        const userData = userSnapshot.data();
+        const res = await axios.post(`${api_url}/users/remove-from-cart`, payload, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.data) {
 
-        // Check if the product is in the cart
-        const productInCart = userData.cart.find(item => item.productId === productId);
-
-        if (productInCart) {
-            // Start a batch write operation
-            const batch = writeBatch(storeDB);
-
-            // Remove the product from the cart
-            const newCart = userData.cart.filter(item => item.productId !== productId);
-            batch.update(userRef, { cart: newCart });
-
-            // If wishlist is true, add the product to the wishlist
-            if (wishlist) {
-                batch.update(userRef, {
-                    wishlist: arrayUnion(productId)
-                });
-            }
-
-            // Commit the batch write to the database
-            await batch.commit();
-            // Fetch the updated cart data
             dispatch(fetchCartData());
         } else {
             console.log(`Product with id ${productId} not found in cart.`);
         }
-
     } catch (error) {
         console.log(error);
     }
 };
-
 
 
 export const getWishlistDataRequest = () => ({ type: WISHLIST_GET_REQUEST });

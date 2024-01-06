@@ -42,7 +42,7 @@ const cart = () => {
 
   const btnOnClick = (action, id, userId) => {
     if (action === "Remove") {
-      dispatch(removeFromCart(id, userId));
+      dispatch(removeFromCart(id));
     } else if (action === "Wishlist") {
       dispatch(removeFromCart(id, userId, true));
     }
