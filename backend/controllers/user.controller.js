@@ -168,6 +168,11 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, req.user, "Current user fetch successfull"))
 })
+const getUserCartData = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(200, req.user.cartItems, "Cart data fetch successfull"))
+})
 
 const addToCart = asyncHandler(async (req, res) => {
     const { id, quantity } = req.body
@@ -191,5 +196,6 @@ module.exports = {
     logOutUser,
     refreshAccessToken,
     getCurrentUser,
-    addToCart
+    addToCart,
+    getUserCartData
 }

@@ -2,13 +2,17 @@ import { useEffect, useState, useRef } from "react";
 import BuyersChoice from "../Components/Homepage/BuyersChoice";
 import Emptycart from "./Emptycart";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../Redux/Products/action";
+import { fetchCartData, removeFromCart } from "../Redux/Products/action";
 import Cartitem from "../Components/Cartitem";
 import { useNavigate } from "react-router-dom";
 import { fetchPricesAndCalculateSubtotal } from "../Components/Common/common";
 
 const cart = () => {
   const { cartData } = useSelector((store) => store.cartReducer);
+  console.log(cartData);
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, []);
   const dispatch = useDispatch();
   const [cartItemsCount, setcartItemsCount] = useState(0);
   const [cartEmpty, setCartEmpty] = useState(true);

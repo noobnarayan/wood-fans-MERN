@@ -6,7 +6,6 @@ export const getDataRequest = () => ({ type: DATA_GET_REQUEST });
 export const getDataSuccess = (data) => ({ type: DATA_GET_SUCCESS, payload: data });
 export const getDataFailure = (error) => ({ type: DATA_GET_FAILURE, payload: error });
 
-console.log(api_url);
 export const fetchData = () => async (dispatch) => {
     dispatch(getDataRequest());
     try {
@@ -45,13 +44,15 @@ export const getCartDataSuccess = (data) => ({ type: CART_GET_SUCCESS, payload: 
 export const getCartDataFailure = (error) => ({ type: CART_GET_FAILURE, payload: error });
 
 export const fetchCartData = (userId) => async (dispatch) => {
+    const token = JSON.parse(localStorage.getItem("accessToken"));
     dispatch(getCartDataRequest());
     try {
-        const userRef = doc(storeDB, 'users', userId);
-        const userSnap = await getDoc(userRef);
-        const userData = userSnap.data();
-        const cartData = userData.cart;
+        const res = await axios.get(`${api_url}/users/get-cart-data`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        const cartData = res.data.data;
         dispatch(getCartDataSuccess(cartData));
+
     } catch (error) {
         console.log(error);
         dispatch(getCartDataFailure(error));
