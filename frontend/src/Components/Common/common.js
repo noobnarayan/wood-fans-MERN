@@ -56,11 +56,10 @@ export const fetchPricesAndCalculateSubtotal = async (cartData, setSubtotalValue
     try {
         let subtotal = 0;
         for (const item of cartData) {
-            const docRef = doc(storeDB, "products", item.productId);
-            const docSnap = await getDoc(docRef);
+            const product = await axios.get(`${api_url}/products/${item.productId}`)
 
-            if (docSnap.exists()) {
-                subtotal += docSnap.data().price * item.quantity;
+            if (product.data) {
+                subtotal += product.data.data.price * item.quantity;
             } else {
                 console.log(`No document found for productId: ${item.productId}`);
             }

@@ -188,6 +188,25 @@ const addToCart = asyncHandler(async (req, res) => {
         throw new ApiError(500, `An error occurred while adding the item to the cart: ${error}`)
     }
 })
+const removeFromCart = asyncHandler(async (req, res) => {
+    const { id } = req.body
+
+    try {
+        const user = await User.findById(req.user._id)
+        const itemIndex = user.cartItems.findIndex(item => item.productId == id)
+
+        if (itemIndex > -1) {
+            user.cartItems.splice(itemIndex, 1)
+            await user.save()
+            res.status(200).json(new ApiResponse(200, {}, 'Item removed from cart successfully'))
+        } else {
+            throw new ApiError(404, `Item not found in the cart`)
+        }
+    } catch (error) {
+        throw new ApiError(500, `An error occurred while removing the item from the cart: ${error}`)
+    }
+
+})
 
 
 module.exports = {
@@ -197,5 +216,6 @@ module.exports = {
     refreshAccessToken,
     getCurrentUser,
     addToCart,
-    getUserCartData
+    getUserCartData,
+    removeFromCart
 }
