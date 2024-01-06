@@ -179,7 +179,7 @@ const addToCart = asyncHandler(async (req, res) => {
 
     try {
         const user = await User.findById(req.user._id)
-        user.cartItems.push({ product: id, quantity })
+        user.cartItems.push({ productId: id, quantity })
 
         await user.save()
 

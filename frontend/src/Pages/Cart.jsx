@@ -9,7 +9,6 @@ import { fetchPricesAndCalculateSubtotal } from "../Components/Common/common";
 
 const cart = () => {
   const { cartData } = useSelector((store) => store.cartReducer);
-  console.log(cartData);
   useEffect(() => {
     dispatch(fetchCartData());
   }, []);

@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { storeDB, auth, doc, getDoc, collection, getDocs, query, where } from '../../Services/firebaseConfig';
+import { api_url } from '../../../config';
 export function filterByCategoryAndNameLength(category, setCurrentProducts, productData) {
     if (!productData) {
         return;
@@ -40,17 +42,11 @@ export async function fetchUserData(setUid, setUserData) {
     return unsubscribe;
 }
 
-
 export const fetchSingleProductData = async (productId, setMainImg, setItemData) => {
     try {
-        const productDocRef = doc(storeDB, "products", productId);
-        const productDocSnapshot = await getDoc(productDocRef);
-        if (productDocSnapshot.exists()) {
-            setMainImg(productDocSnapshot.data().images);
-            setItemData({ id: productId, ...productDocSnapshot.data() });
-        } else {
-            console.log("No such document!");
-        }
+        const product = await axios.get(`${api_url}/products/${productId}`)
+        setMainImg(product.data.data.images);
+        setItemData({ id: productId, ...product.data.data });
     } catch (error) {
         console.error("Error fetching product data:", error);
     }
