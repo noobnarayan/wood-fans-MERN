@@ -7,6 +7,7 @@ import shoppingbag from "../../../assets/shoppingbag.svg";
 import Button from "../Button";
 
 import { getUserData } from "../../../Redux/Auth/action";
+import { fetchCartData } from "../../../Redux/Products/action";
 
 const Navbar = () => {
   const { cartData } = useSelector((store) => store.cartReducer);
@@ -23,6 +24,7 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(getUserData());
+    dispatch(fetchCartData());
   }, []);
 
   useEffect(() => {

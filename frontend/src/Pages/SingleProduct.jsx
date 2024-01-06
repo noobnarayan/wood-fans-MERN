@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import IconButton from "../Components/Common/IconButton";
 import {
@@ -23,7 +23,7 @@ import { useEffect } from "react";
 import { storeDB, getDoc, auth, doc } from "../Services/firebaseConfig";
 import { useState } from "react";
 import PopupMessage from "../Components/Common/PopupMessage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartData } from "../Redux/Products/action";
 import axios from "axios";
 import { api_url } from "../../config";
@@ -31,9 +31,15 @@ const sizeArray = ["Big", "Average", "Small"];
 const quantityArray = [1, 2, 3, 4];
 
 const SingleProduct = () => {
+  const { userData } = useSelector((store) => store.authReducer);
   const { id } = useParams();
 
-  const userId = auth?.currentUser?.uid;
+  const userId = useRef(null);
+
+  useEffect(() => {
+    userId.current = userData?._id;
+    console.log(userId);
+  }, [userData]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
@@ -45,12 +51,12 @@ const SingleProduct = () => {
   const handleAddToCart = (productId, userId, buttonType) => {
     if (userId) {
       if (buttonType === "add to cart") {
-        dispatch(addToCart(productId, userId));
+        dispatch(addToCart(productId));
         dispatch(fetchCartData(userId));
         setShowPopup(true);
         setTimeout(() => setShowPopup(false), 1000);
       } else {
-        dispatch(addToCart(productId, userId));
+        dispatch(addToCart(productId));
         dispatch(fetchCartData(userId));
         navigate("/cart");
       }

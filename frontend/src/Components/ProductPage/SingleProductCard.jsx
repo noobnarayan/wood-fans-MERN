@@ -38,7 +38,7 @@ function SingleProductCard({ product, redirectToDetail }) {
   };
   const handleAddToCart = (productId) => {
     if (userId) {
-      dispatch(addToCart(productId, userId));
+      dispatch(addToCart(productId));
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 1000);
     } else {

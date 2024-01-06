@@ -21,7 +21,7 @@ export const fetchData = () => async (dispatch) => {
 
 
 // Do not use in cart page.
-export const addToCart = (productId, userId) => async (dispatch) => {
+export const addToCart = (productId) => async (dispatch) => {
     const token = JSON.parse(localStorage.getItem("accessToken"));
     const payload = {
         id: productId,
@@ -32,7 +32,7 @@ export const addToCart = (productId, userId) => async (dispatch) => {
         const res = await axios.post(`${api_url}/users/add-to-cart`, payload, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        dispatch(fetchCartData(userId));
+        dispatch(fetchCartData());
     } catch (error) {
         console.log(error);
     }
@@ -43,7 +43,7 @@ export const getCartDataRequest = () => ({ type: CART_GET_REQUEST });
 export const getCartDataSuccess = (data) => ({ type: CART_GET_SUCCESS, payload: data });
 export const getCartDataFailure = (error) => ({ type: CART_GET_FAILURE, payload: error });
 
-export const fetchCartData = (userId) => async (dispatch) => {
+export const fetchCartData = () => async (dispatch) => {
     const token = JSON.parse(localStorage.getItem("accessToken"));
     dispatch(getCartDataRequest());
     try {
@@ -58,9 +58,6 @@ export const fetchCartData = (userId) => async (dispatch) => {
         dispatch(getCartDataFailure(error));
     }
 };
-
-
-
 
 // Do not use in cart page.
 export const addToWishlist = (productId, userId) => async (dispatch) => {
@@ -95,7 +92,7 @@ export const removeFromWishlist = (productId, userId, moveToCart) => async (disp
         // Optionally, dispatch actions to update the state in your Redux store
         dispatch(fetchWishlistData(userId));
         if (moveToCart) {
-            dispatch(fetchCartData(userId));
+            dispatch(fetchCartData());
         }
     } catch (error) {
         console.log(error);
@@ -121,7 +118,7 @@ export const adjustQuantityInCart = (productId, userId, adjustment) => async (di
         });
 
         await updateDoc(userRef, { cart });
-        dispatch(fetchCartData(userId));
+        dispatch(fetchCartData());
     } catch (error) {
         console.log(error);
     }
@@ -157,7 +154,7 @@ export const removeFromCart = (productId, userId, wishlist) => async (dispatch) 
             // Commit the batch write to the database
             await batch.commit();
             // Fetch the updated cart data
-            dispatch(fetchCartData(userId));
+            dispatch(fetchCartData());
         } else {
             console.log(`Product with id ${productId} not found in cart.`);
         }
