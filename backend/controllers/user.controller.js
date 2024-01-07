@@ -285,6 +285,42 @@ const getUserWishlistData = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, req.user.wishlistItems, "Wishlist data fetch successfull"))
 })
+const addVisitedProduct = asyncHandler(async (req, res) => {
+    const { id } = req.body;
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const existingProductIndex = user.recentlyVisitedProducts.findIndex(
+            (product) => product._id.equals(id)
+        );
+
+        if (existingProductIndex > -1) {
+            user.recentlyVisitedProducts[existingProductIndex].visitedAt = Date.now();
+        } else {
+            user.recentlyVisitedProducts.unshift({ _id: id });
+        }
+        const maxProducts = 10;
+        user.recentlyVisitedProducts = user.recentlyVisitedProducts.slice(0, maxProducts);
+
+        await user.save();
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, user.recentlyVisitedProducts, "Recently visited product added successfully"));
+    } catch (error) {
+        throw new ApiError(500, `Error while adding to recently visited products: ${error.message}`)
+    }
+});
+const getVisitedProduct = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(200, req.user.recentlyVisitedProducts, "Wishlist data fetch successfull"))
+});
+
+
+
 
 
 module.exports = {
@@ -300,5 +336,7 @@ module.exports = {
     decreaseQuantity,
     addToWishlist,
     removeFromWishlist,
-    getUserWishlistData
+    getUserWishlistData,
+    addVisitedProduct,
+    getVisitedProduct
 }

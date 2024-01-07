@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { logOutUser, loginUser, refreshAccessToken, registerUser, addToCart, getCurrentUser, getUserCartData, removeFromCart, increaseQuantity, decreaseQuantity, addToWishlist, removeFromWishlist, getUserWishlistData } = require('../controllers/user.controller.js');
+const { logOutUser, loginUser, refreshAccessToken, registerUser, addToCart, getCurrentUser, getUserCartData, removeFromCart, increaseQuantity, decreaseQuantity, addToWishlist, removeFromWishlist, getUserWishlistData, addVisitedProduct, getVisitedProduct } = require('../controllers/user.controller.js');
 const { verifyJWT } = require('../middlewares/auth.middleware.js');
 
 router.route("/register").post(registerUser);
@@ -21,6 +21,10 @@ router.route("/increase-quantity").post(verifyJWT, increaseQuantity);
 router.route("/decrease-quantity").post(verifyJWT, decreaseQuantity);
 router.route("/get-cart-data").get(verifyJWT, getUserCartData);
 router.route("/get-wishlist-data").get(verifyJWT, getUserWishlistData);
+
+
+router.route("/add-visited-products").post(verifyJWT, addVisitedProduct);
+router.route("/get-visited-products").get(verifyJWT, getVisitedProduct);
 
 
 

@@ -33,7 +33,18 @@ const userSchema = new mongoose.Schema({
     }],
     refreshToken: {
         type: String
-    }
+    },
+    recentlyVisitedProducts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",
+            visitedAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ]
+
 });
 
 userSchema.pre("save", async function (next) {

@@ -4,22 +4,25 @@ import { DATA_GET_REQUEST, DATA_GET_SUCCESS, DATA_GET_FAILURE, CART_GET_REQUEST,
 import axios from "axios"
 
 const token = JSON.parse(localStorage.getItem("accessToken"));
-
+// console.log(token);
 export const getDataRequest = () => ({ type: DATA_GET_REQUEST });
 export const getDataSuccess = (data) => ({ type: DATA_GET_SUCCESS, payload: data });
 export const getDataFailure = (error) => ({ type: DATA_GET_FAILURE, payload: error });
 
 export const fetchData = () => async (dispatch) => {
-    dispatch(getDataRequest());
-    try {
-        const response = await axios.get(
-            `${api_url}/products`
-        );
-        dispatch(getDataSuccess(response.data.data));
+    if (token) {
+        dispatch(getDataRequest());
+        try {
+            const response = await axios.get(
+                `${api_url}/products`
+            );
+            dispatch(getDataSuccess(response.data.data));
 
-    } catch (error) {
-        dispatch(getDataFailure(error));
+        } catch (error) {
+            dispatch(getDataFailure(error));
+        }
     }
+
 };
 
 export const addToCart = (productId) => async (dispatch) => {
@@ -27,15 +30,17 @@ export const addToCart = (productId) => async (dispatch) => {
         id: productId,
         quantity: "1"
     }
-
-    try {
-        const res = await axios.post(`${api_url}/users/add-to-cart`, payload, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        dispatch(fetchCartData());
-    } catch (error) {
-        console.log(error);
+    if (token) {
+        try {
+            const res = await axios.post(`${api_url}/users/add-to-cart`, payload, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            dispatch(fetchCartData());
+        } catch (error) {
+            console.log(error);
+        }
     }
+
 };
 
 
@@ -44,83 +49,93 @@ export const getCartDataSuccess = (data) => ({ type: CART_GET_SUCCESS, payload: 
 export const getCartDataFailure = (error) => ({ type: CART_GET_FAILURE, payload: error });
 
 export const fetchCartData = () => async (dispatch) => {
-    dispatch(getCartDataRequest());
-    try {
-        const res = await axios.get(`${api_url}/users/get-cart-data`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        const cartData = res.data.data;
-        dispatch(getCartDataSuccess(cartData));
+    if (token) {
+        dispatch(getCartDataRequest());
+        try {
+            const res = await axios.get(`${api_url}/users/get-cart-data`, {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            const cartData = res.data.data;
+            dispatch(getCartDataSuccess(cartData));
 
-    } catch (error) {
-        console.log(error);
-        dispatch(getCartDataFailure(error));
+        } catch (error) {
+            console.log(error);
+            dispatch(getCartDataFailure(error));
+        }
     }
 };
 
 export const addToWishlist = (productId) => async (dispatch) => {
-    const payload = { id: productId }
-    try {
-        const res = await axios.post(`${api_url}/users/add-to-wishlist`, payload, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-    } catch (error) {
-        console.log(error);
+    if (token) {
+        const payload = { id: productId }
+        try {
+            const res = await axios.post(`${api_url}/users/add-to-wishlist`, payload, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 };
 
 export const removeFromWishlist = (productId, moveToCart) => async (dispatch) => {
-    const payload = { id: productId }
-    try {
-        const res = await axios.post(`${api_url}/users/remove-from-wishlist`, payload, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        dispatch(fetchWishlistData(userId));
-        if (moveToCart) {
-            dispatch(fetchCartData());
+    if (token) {
+        const payload = { id: productId }
+        try {
+            const res = await axios.post(`${api_url}/users/remove-from-wishlist`, payload, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            dispatch(fetchWishlistData());
+            if (moveToCart) {
+                dispatch(fetchCartData());
+            }
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        console.log(error);
     }
 };
 export const adjustQuantityInCart = (productId, adjustment) => async (dispatch) => {
-    const payload = {
-        id: productId
-    }
-    try {
-        if (adjustment === "inc") {
-            const res = await axios.post(`${api_url}/users/increase-quantity`, payload, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+    if (token) {
+        const payload = {
+            id: productId
         }
+        try {
+            if (adjustment === "inc") {
+                const res = await axios.post(`${api_url}/users/increase-quantity`, payload, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+            }
 
-        if (adjustment === "dec") {
-            const res = await axios.post(`${api_url}/users/decrease-quantity`, payload, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            if (adjustment === "dec") {
+                const res = await axios.post(`${api_url}/users/decrease-quantity`, payload, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+            }
+
+            dispatch(fetchCartData());
+        } catch (error) {
+            console.log(error);
         }
-
-        dispatch(fetchCartData());
-    } catch (error) {
-        console.log(error);
     }
 };
 
 
 export const removeFromCart = (productId, wishlist) => async (dispatch) => {
-    const payload = { id: productId }
-    try {
-        const res = await axios.post(`${api_url}/users/remove-from-cart`, payload, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res.data) {
+    if (token) {
+        const payload = { id: productId }
+        try {
+            const res = await axios.post(`${api_url}/users/remove-from-cart`, payload, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.data) {
 
-            dispatch(fetchCartData());
-        } else {
-            console.log(`Product with id ${productId} not found in cart.`);
+                dispatch(fetchCartData());
+            } else {
+                console.log(`Product with id ${productId} not found in cart.`);
+            }
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        console.log(error);
     }
 };
 
@@ -129,18 +144,20 @@ export const getWishlistDataRequest = () => ({ type: WISHLIST_GET_REQUEST });
 export const getWishlistDataSuccess = (data) => ({ type: WISHLIST_GET_SUCCESS, payload: data });
 export const getWishlistDataFailure = (error) => ({ type: WISHLIST_GET_FAILURE, payload: error });
 
-export const fetchWishlistData = (userId) => async (dispatch) => {
-    dispatch(getWishlistDataRequest());
-    try {
-        const res = await axios.get(`${api_url}/users/get-wishlist-data`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        const wishlistData = res.data.data
+export const fetchWishlistData = () => async (dispatch) => {
+    if (token) {
+        dispatch(getWishlistDataRequest());
+        try {
+            const res = await axios.get(`${api_url}/users/get-wishlist-data`, {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            const wishlistData = res.data.data
 
-        dispatch(getWishlistDataSuccess(wishlistData));
-    } catch (error) {
-        console.log(error);
-        dispatch(getWishlistDataFailure(error));
+            dispatch(getWishlistDataSuccess(wishlistData));
+        } catch (error) {
+            console.log(error);
+            dispatch(getWishlistDataFailure(error));
+        }
     }
 };
 
