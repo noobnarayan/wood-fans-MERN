@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../Pages/Home";
 import LoginAndSignup from "../Pages/SignUp&Login/LoginAndSignup";
@@ -11,14 +11,19 @@ import Checkout from "../Pages/Checkout";
 import { useSelector } from "react-redux";
 
 const AllRoutes = () => {
-  const { isAuth } = useSelector((store) => store.authReducer);
-
+  const { userData } = useSelector((store) => store.authReducer);
+  const [authStatus, setAuthStatus] = useState(null);
+  useEffect(() => {
+    if (userData) {
+      setAuthStatus(true);
+    }
+  }, [userData]);
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route
         path="/login"
-        element={isAuth ? <Navigate to="/" /> : <LoginAndSignup />}
+        element={authStatus ? <Navigate to="/" /> : <LoginAndSignup />}
       />
       <Route path="/products/:category" element={<ProductPage />} />
       <Route path="/product/:id" element={<SingleProduct />} />
@@ -26,11 +31,11 @@ const AllRoutes = () => {
       <Route path="/success" element={<OrderConfirmation />} />
       <Route
         path="/user/profile"
-        element={isAuth ? <UserProfile /> : <Navigate to="/login" />}
+        element={authStatus ? <UserProfile /> : <Navigate to="/login" />}
       />
       <Route
         path="/checkout"
-        element={isAuth ? <Checkout /> : <Navigate to="/login" />}
+        element={authStatus ? <Checkout /> : <Navigate to="/login" />}
       />
     </Routes>
   );

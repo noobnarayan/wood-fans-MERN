@@ -11,7 +11,7 @@ import { fetchCartData } from "../../../Redux/Products/action";
 
 const Navbar = () => {
   const { cartData } = useSelector((store) => store.cartReducer);
-  const { userData } = useSelector((store) => store.authReducer);
+  const { userData, isAuth } = useSelector((store) => store.authReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ const Navbar = () => {
   useEffect(() => {
     dispatch(getUserData());
     dispatch(fetchCartData());
-  }, [userData]);
+  }, []);
 
   useEffect(() => {
     if (userData) {
@@ -53,8 +53,10 @@ const Navbar = () => {
   const toHome = () => {
     navigate("/");
   };
-  const handleVisitProfile = () => {
-    navigate("/user/profile");
+  const handleVisitProfile = async () => {
+    if (authStatus) {
+      navigate("/user/profile");
+    }
   };
   const toCartPage = () => {
     navigate("/cart");
