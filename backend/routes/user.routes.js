@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { logOutUser, loginUser, refreshAccessToken, registerUser, addToCart, getCurrentUser, getUserCartData, removeFromCart } = require('../controllers/user.controller.js');
+const { logOutUser, loginUser, refreshAccessToken, registerUser, addToCart, getCurrentUser, getUserCartData, removeFromCart, increaseQuantity, decreaseQuantity } = require('../controllers/user.controller.js');
 const { verifyJWT } = require('../middlewares/auth.middleware.js');
 
 router.route("/register").post(registerUser);

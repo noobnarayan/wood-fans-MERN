@@ -16,10 +16,12 @@ const Cartitem = ({ product, btnOnClick }) => {
   const { category, name, price } = itemData;
 
   const increaseQuantity = () => {
-    dispatch(adjustQuantityInCart(productId, userId, 1));
+    const inc = "inc";
+    dispatch(adjustQuantityInCart(productId, inc));
   };
   const decreaseQuantity = () => {
-    dispatch(adjustQuantityInCart(productId, userId, -1));
+    const dec = "dec";
+    dispatch(adjustQuantityInCart(productId, dec));
   };
 
   return (

@@ -208,7 +208,6 @@ const removeFromCart = asyncHandler(async (req, res) => {
 
 })
 
-// Increase quantity
 const increaseQuantity = asyncHandler(async (req, res) => {
     const { id } = req.body
 
@@ -228,7 +227,6 @@ const increaseQuantity = asyncHandler(async (req, res) => {
     }
 })
 
-// Decrease quantity
 const decreaseQuantity = asyncHandler(async (req, res) => {
     const { id } = req.body
 
