@@ -25,7 +25,7 @@ const Navbar = () => {
   useEffect(() => {
     dispatch(getUserData());
     dispatch(fetchCartData());
-  }, []);
+  }, [userData]);
 
   useEffect(() => {
     if (userData) {

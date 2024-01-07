@@ -10,7 +10,7 @@ import {
 import Signup from "./Signup";
 import Login from "./Login";
 import { useDispatch, useSelector } from "react-redux";
-import { loginWithFacebook, loginWithGoogle } from "../../Redux/Auth/action";
+// import { loginWithFacebook, loginWithGoogle } from "../../Redux/Auth/action";
 import PopUpDialog from "../../Components/Common/PopUpDialog";
 import { greenTik, worngTik } from "../../assets/animation/animi";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +24,6 @@ const LoginAndSignup = () => {
     show: false,
   });
 
-  // const [show, setShow] = useState(false)
- 
   const theme = useSelector((store) => store.themeReducer.theme);
   const dispatch = useDispatch();
 
@@ -35,38 +33,15 @@ const LoginAndSignup = () => {
     navigate("/");
   };
 
-
-  // console.log(errorMessage,successMessage)
-
-  // const handleSuccessMessage = () => {
-  //   setShowPopup({
-  //     message: successMessage,
-  //     lottie: "success",
-  //     show: true,
-  //   });
-  //   setShow(!show)
-  // };
-  // const handleErrorMessage = () => {
-  //   setShowPopup({
-  //     message: errorMessage,
-  //     lottie: "error",
-  //     show: true,
-  //   });
-    
-  //   setShow(!show)
-  // };
-
-  
-
   const handleLoginAndSign = () => {
     setIsLogin((p) => !p);
   };
-  const handleLoginWithGoogle = () => {
-    dispatch(loginWithGoogle(redirectToHome));
-  };
-  const handleLoginWithFacebook = () => {
-    dispatch(loginWithFacebook(redirectToHome));
-  };
+  // const handleLoginWithGoogle = () => {
+  //   dispatch(loginWithGoogle(redirectToHome));
+  // };
+  // const handleLoginWithFacebook = () => {
+  //   dispatch(loginWithFacebook(redirectToHome));
+  // };
   return (
     <div
       className={`grid grid-cols-1 md:grid-cols-2 max-w-screen-xl m-auto gap-5 p-5 font-Poppins justify-center items-center ${
@@ -76,12 +51,12 @@ const LoginAndSignup = () => {
     >
       <div className="flex-1">
         {isLogin ? (
-          <Signup onClick={handleLoginAndSign}/>
+          <Signup onClick={handleLoginAndSign} />
         ) : (
           <Login onClick={handleLoginAndSign} />
         )}
 
-        <div className="grid grid-cols-2 gap-4 mt-3">
+        {/* <div className="grid grid-cols-2 gap-4 mt-3">
           <ImageButton
             image={facebookIcon}
             className="bg-[#4267b2] md:text-md 2sm:text-[15px] xl:text-lg"
@@ -94,7 +69,7 @@ const LoginAndSignup = () => {
             text="Login with Google"
             onClick={handleLoginWithGoogle}
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="rounded-xl border shadow-sm w-[100%] relative hidden md:block">

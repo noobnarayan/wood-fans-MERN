@@ -37,7 +37,7 @@ function SingleProductCard({ product, redirectToDetail }) {
     setWishListClicked((pre) => !pre);
   };
   const handleAddToCart = (productId) => {
-    if (userId) {
+    if (userId.current) {
       dispatch(addToCart(productId));
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 1000);
@@ -47,7 +47,7 @@ function SingleProductCard({ product, redirectToDetail }) {
   };
 
   const handleAddToWishList = (productId, userId) => {
-    if (userId) {
+    if (userId.current) {
       if (wishListClicked) {
         dispatch(removeFromWishlist(productId, userId));
       } else {

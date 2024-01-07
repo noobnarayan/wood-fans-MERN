@@ -30,7 +30,31 @@ const signUpFailure = (payload) => {
      return { type: SIGN_UP_FAILURE, payload }
 }
 
-// login with email and password 
+const signUpNewUser = (email, password, name) => async (dispatch) => {
+     const payload = {
+          name,
+          email,
+          password
+     };
+
+     try {
+          dispatch(signUpRequest());
+
+          const res = await axios.post(`${api_url}/users/register`, payload);
+          console.log(res);
+
+
+          dispatch(signUpSuccess(`Welcome, ${name}!`));
+     } catch (error) {
+          let errorMessage = "Sign-up failed. Please check your information and try again";
+          if (error.code === "auth/email-already-in-use") {
+               errorMessage = "The email address is already in use by another account. Please use a different email";
+          }
+          dispatch(signUpFailure(errorMessage));
+     }
+}
+
+
 const loginWithEmailAndPassword = (email, password, onSuccess) => async (dispatch) => {
      const payload = {
           email,
@@ -40,7 +64,7 @@ const loginWithEmailAndPassword = (email, password, onSuccess) => async (dispatc
           const res = await axios.post(`${api_url}/users/login`, payload);
           const token = res.data.data.accessToken
           localStorage.setItem("accessToken", JSON.stringify(token))
-
+          dispatch(getUserData())
           onSuccess()
      } catch (error) {
           console.log(error);
@@ -103,66 +127,8 @@ const loginWithGoogle = (onRedirect) => async (dispatch) => {
      }
 };
 
-// login with Facebook
-const loginWithFacebook = (onRedirect) => async (dispatch) => {
-     try {
-          dispatch(loginRequest());
-          const result = await signInWithPopup(auth, facebookProvider)
-
-          dispatch(loginSuccess(`Welcome, ${result.user.displayName}!`))
-          onRedirect()
-     } catch (error) {
-          dispatch(loginFailure(`Sign-In Error: ${error.message}`))
-     }
-}
-
-// SignUp new user 
-const signUpNewUser = (email, password, name) => async (dispatch) => {
-     const payload = {
-          name,
-          email,
-          password
-     };
-
-     try {
-          dispatch(signUpRequest());
-
-          const res = await axios.post(`${api_url}/users/register`, payload);
-          console.log(res);
-
-
-          dispatch(signUpSuccess(`Welcome, ${name}!`));
-     } catch (error) {
-          let errorMessage = "Sign-up failed. Please check your information and try again";
-          if (error.code === "auth/email-already-in-use") {
-               errorMessage = "The email address is already in use by another account. Please use a different email";
-          }
-          dispatch(signUpFailure(errorMessage));
-     }
-}
-
-// Forgot Password
-const forgotPassword = (email) => async (dispatch) => {
-     try {
-          // Send a password reset email
-          await sendPasswordResetEmail(auth, email);
-
-          // Dispatch a success action
-          dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: 'Password reset email sent. Check your inbox.' });
-     } catch (error) {
-          // Dispatch a failure action
-          dispatch({ type: FORGOT_PASSWORD_FAILURE, payload: `Password reset failed: ${error.message}` });
-     }
-};
-
-// Set user data.
-
-
-
-// Export functions
 export {
      loginWithEmailAndPassword,
-     loginWithFacebook,
      loginWithGoogle,
      signUpNewUser,
      getUserData

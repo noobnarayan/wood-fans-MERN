@@ -48,7 +48,7 @@ const SingleProduct = () => {
   const productId = id;
 
   const handleAddToCart = (productId, userId, buttonType) => {
-    if (userId) {
+    if (userId.current) {
       if (buttonType === "add to cart") {
         dispatch(addToCart(productId));
         dispatch(fetchCartData(userId));
