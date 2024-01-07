@@ -1,7 +1,10 @@
 import { api_url } from '../../../config';
-import { storeDB, query, collection, getDoc, getDocs, doc, updateDoc, arrayUnion, arrayRemove, writeBatch } from '../../Services/firebaseConfig'
+import { storeDB, collection, writeBatch } from '../../Services/firebaseConfig'
 import { DATA_GET_REQUEST, DATA_GET_SUCCESS, DATA_GET_FAILURE, CART_GET_REQUEST, CART_GET_SUCCESS, CART_GET_FAILURE, WISHLIST_GET_REQUEST, WISHLIST_GET_SUCCESS, WISHLIST_GET_FAILURE } from './actionTypes';
 import axios from "axios"
+
+const token = JSON.parse(localStorage.getItem("accessToken"));
+
 export const getDataRequest = () => ({ type: DATA_GET_REQUEST });
 export const getDataSuccess = (data) => ({ type: DATA_GET_SUCCESS, payload: data });
 export const getDataFailure = (error) => ({ type: DATA_GET_FAILURE, payload: error });
@@ -19,10 +22,7 @@ export const fetchData = () => async (dispatch) => {
     }
 };
 
-
-// Do not use in cart page.
 export const addToCart = (productId) => async (dispatch) => {
-    const token = JSON.parse(localStorage.getItem("accessToken"));
     const payload = {
         id: productId,
         quantity: "1"
@@ -44,7 +44,6 @@ export const getCartDataSuccess = (data) => ({ type: CART_GET_SUCCESS, payload: 
 export const getCartDataFailure = (error) => ({ type: CART_GET_FAILURE, payload: error });
 
 export const fetchCartData = () => async (dispatch) => {
-    const token = JSON.parse(localStorage.getItem("accessToken"));
     dispatch(getCartDataRequest());
     try {
         const res = await axios.get(`${api_url}/users/get-cart-data`, {
@@ -59,9 +58,7 @@ export const fetchCartData = () => async (dispatch) => {
     }
 };
 
-// Do not use in cart page.
 export const addToWishlist = (productId) => async (dispatch) => {
-    const token = JSON.parse(localStorage.getItem("accessToken"));
     const payload = { id: productId }
     try {
         const res = await axios.post(`${api_url}/users/add-to-wishlist`, payload, {
@@ -72,25 +69,12 @@ export const addToWishlist = (productId) => async (dispatch) => {
     }
 };
 
-export const removeFromWishlist = (productId, userId, moveToCart) => async (dispatch) => {
+export const removeFromWishlist = (productId, moveToCart) => async (dispatch) => {
+    const payload = { id: productId }
     try {
-        const userRef = doc(storeDB, 'users', userId);
-        const batch = writeBatch(storeDB);
-
-        // Remove from wishlist
-        batch.update(userRef, {
-            wishlist: arrayRemove(productId)
+        const res = await axios.post(`${api_url}/users/remove-from-wishlist`, payload, {
+            headers: { Authorization: `Bearer ${token}` },
         });
-
-        // Conditionally add to cart
-        if (moveToCart) {
-            batch.update(userRef, {
-                cart: arrayUnion({ productId, quantity: 1 })
-            });
-        }
-
-        await batch.commit();
-        // Optionally, dispatch actions to update the state in your Redux store
         dispatch(fetchWishlistData(userId));
         if (moveToCart) {
             dispatch(fetchCartData());
@@ -100,7 +84,6 @@ export const removeFromWishlist = (productId, userId, moveToCart) => async (disp
     }
 };
 export const adjustQuantityInCart = (productId, adjustment) => async (dispatch) => {
-    const token = JSON.parse(localStorage.getItem("accessToken"));
     const payload = {
         id: productId
     }
@@ -125,7 +108,6 @@ export const adjustQuantityInCart = (productId, adjustment) => async (dispatch) 
 
 
 export const removeFromCart = (productId, wishlist) => async (dispatch) => {
-    const token = JSON.parse(localStorage.getItem("accessToken"));
     const payload = { id: productId }
     try {
         const res = await axios.post(`${api_url}/users/remove-from-cart`, payload, {
@@ -150,10 +132,11 @@ export const getWishlistDataFailure = (error) => ({ type: WISHLIST_GET_FAILURE, 
 export const fetchWishlistData = (userId) => async (dispatch) => {
     dispatch(getWishlistDataRequest());
     try {
-        const userRef = doc(storeDB, 'users', userId);
-        const userSnap = await getDoc(userRef);
-        const userData = userSnap.data();
-        const wishlistData = userData.wishlist;
+        const res = await axios.get(`${api_url}/users/get-wishlist-data`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        const wishlistData = res.data.data
+
         dispatch(getWishlistDataSuccess(wishlistData));
     } catch (error) {
         console.log(error);

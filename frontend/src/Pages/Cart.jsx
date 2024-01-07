@@ -22,15 +22,19 @@ const cart = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleCouponChange = (couponCode, subtotal) => {
-    const upperCoupon = couponCode.toUpperCase();
-    return upperCoupon === "TEAM3"
-      ? {
-          text: "You got 30% off!",
-          color: "text-green-600",
-          discount: subtotal * 0.3,
-        }
-      : { text: "Invalid coupon.", color: "text-red-600", discount: 0 };
+  const handleCouponChange = () => {
+    const upperCoupon = coupon.toUpperCase();
+    if (upperCoupon === "TEAM3") {
+      const discount = subtotalValue * 0.3;
+      setDiscount(discount);
+      setCartTotal(subtotalValue - discount);
+      setMessage({ text: "You got 30% off!", color: "text-green-600" });
+      setCoupon(upperCoupon);
+    } else {
+      setDiscount(0);
+      setMessage({ text: "Invalid coupon.", color: "text-red-600" });
+      setCoupon("");
+    }
   };
 
   useEffect(() => {
