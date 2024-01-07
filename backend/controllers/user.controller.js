@@ -246,6 +246,45 @@ const decreaseQuantity = asyncHandler(async (req, res) => {
     }
 })
 
+const addToWishlist = asyncHandler(async (req, res) => {
+    const { id } = req.body
+
+    try {
+        const user = await User.findById(req.user._id)
+        user.cartItems.push({ productId: id })
+
+        await user.save()
+
+        res.status(200).json(new ApiResponse(200, {}, 'Item added to cart successfully'))
+    } catch (error) {
+        throw new ApiError(500, `An error occurred while adding the item to the cart: ${error}`)
+    }
+})
+const removeFromWishlist = asyncHandler(async (req, res) => {
+    const { id } = req.body
+
+    try {
+        const user = await User.findById(req.user._id)
+        const itemIndex = user.wishlistItems.findIndex(item => item.productId === id)
+
+        if (itemIndex > -1) {
+            user.wishlistItems.splice(itemIndex, 1)
+            await user.save()
+            res.status(200).json(new ApiResponse(200, {}, 'Item removed from wishlist successfully'))
+        } else {
+            throw new ApiError(404, 'Item not found in wishlist')
+        }
+    } catch (error) {
+        throw new ApiError(500, `An error occurred while removing the item from the wishlist: ${error}`)
+    }
+})
+
+
+const getUserWishlistData = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(200, req.user.wishlistItems, "Cart data fetch successfull"))
+})
 
 
 module.exports = {
@@ -258,5 +297,8 @@ module.exports = {
     getUserCartData,
     removeFromCart,
     increaseQuantity,
-    decreaseQuantity
+    decreaseQuantity,
+    addToWishlist,
+    removeFromWishlist,
+    getUserWishlistData
 }
