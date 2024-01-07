@@ -151,12 +151,7 @@ const Navbar = () => {
                               >
                                 My Profile
                               </li>
-                              <li
-                                className="p-2 hover:bg-gray-100 cursor-pointer"
-                                onClick={handleMyOrders}
-                              >
-                                My Orders
-                              </li>
+
                               <li
                                 className="p-2 hover:bg-gray-100 cursor-pointer"
                                 onClick={handleLogout}

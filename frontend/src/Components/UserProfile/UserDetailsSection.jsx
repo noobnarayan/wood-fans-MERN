@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { storeDB, doc, updateDoc } from "../../Services/firebaseConfig";
 
-function UserDetailsSection({ userData, uid }) {
+function UserDetailsSection({ userData }) {
   if (!userData) {
     return <div>Loading...</div>;
   }
@@ -16,13 +15,13 @@ function UserDetailsSection({ userData, uid }) {
   };
 
   const handleSave = async () => {
-    const userDoc = doc(storeDB, "users", uid);
-    const updatedUserData = {
-      name: newName,
-      phoneNumber: newPhoneNumber,
-    };
-    await updateDoc(userDoc, updatedUserData);
-    setIsEditing(false);
+    // const userDoc = doc(storeDB, "users", uid);
+    // const updatedUserData = {
+    //   name: newName,
+    //   phoneNumber: newPhoneNumber,
+    // };
+    // await updateDoc(userDoc, updatedUserData);
+    // setIsEditing(false);
   };
 
   return (

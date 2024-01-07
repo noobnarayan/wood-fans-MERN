@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from "react";
 import UserDetailsSection from "../Components/UserProfile/UserDetailsSection";
-import { storeDB, auth, doc, getDoc } from "../Services/firebaseConfig";
-import { fetchUserData } from "../Components/Common/common";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData } from "../Redux/Auth/action";
 
 function UserProfile() {
+  const dispatch = useDispatch();
   const [current, setCurrent] = useState("My Profile");
-  const [userData, setUserData] = useState(null);
-  const [uid, setUid] = useState("");
+  const { userData } = useSelector((store) => store.authReducer);
+  useEffect(() => {
+    dispatch(getUserData());
+  }, []);
   const handleClick = (section) => {
     setCurrent(section);
   };
-
-  useEffect(() => {
-    let unsubscribe;
-
-    fetchUserData(setUid, setUserData).then((unsub) => {
-      unsubscribe = unsub;
-    });
-
-    return () => unsubscribe && unsubscribe();
-  }, []);
 
   return (
     <div>
@@ -56,9 +49,7 @@ function UserProfile() {
             </div>
           </div>
         </div>
-        {current === "My Profile" && (
-          <UserDetailsSection userData={userData} uid={uid} />
-        )}
+        {current === "My Profile" && <UserDetailsSection userData={userData} />}
       </div>
     </div>
   );
