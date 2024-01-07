@@ -60,11 +60,12 @@ export const fetchCartData = () => async (dispatch) => {
 };
 
 // Do not use in cart page.
-export const addToWishlist = (productId, userId) => async (dispatch) => {
+export const addToWishlist = (productId) => async (dispatch) => {
+    const token = JSON.parse(localStorage.getItem("accessToken"));
+    const payload = { id: productId }
     try {
-        const userRef = doc(storeDB, 'users', userId);
-        await updateDoc(userRef, {
-            wishlist: arrayUnion(productId)
+        const res = await axios.post(`${api_url}/users/add-to-wishlist`, payload, {
+            headers: { Authorization: `Bearer ${token}` },
         });
     } catch (error) {
         console.log(error);
