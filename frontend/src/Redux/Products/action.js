@@ -40,7 +40,7 @@ export const addToCart = (productId) => async (dispatch) => {
     }
     if (token) {
         try {
-            const res = await axios.post(`${api_url}/users//cart`, payload, {
+            const res = await axios.post(`${api_url}/users/cart`, payload, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             dispatch(fetchCartData());
@@ -54,7 +54,7 @@ export const fetchCartData = () => async (dispatch) => {
     if (token) {
         dispatch(getCartDataRequest());
         try {
-            const res = await axios.get(`${api_url}/users//cart`, {
+            const res = await axios.get(`${api_url}/users/cart`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
             const cartData = res.data.data;
@@ -71,7 +71,7 @@ export const addToWishlist = (productId) => async (dispatch) => {
     if (token) {
         const payload = { id: productId }
         try {
-            const res = await axios.post(`${api_url}/users//wishlist`, payload, {
+            const res = await axios.post(`${api_url}/users/wishlist`, payload, {
                 headers: { Authorization: `Bearer ${token}` },
             });
         } catch (error) {
@@ -82,11 +82,13 @@ export const addToWishlist = (productId) => async (dispatch) => {
 
 export const removeFromWishlist = (productId, moveToCart) => async (dispatch) => {
     if (token) {
-        const payload = { id: productId }
+        console.log(token);
         try {
-            const res = await axios.delete(`${api_url}/users//wishlist`, payload, {
+            const res = await axios.delete(`${api_url}/users/wishlist/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
+
+            console.log(res);
             dispatch(fetchWishlistData());
             if (moveToCart) {
                 dispatch(fetchCartData());
@@ -104,13 +106,13 @@ export const adjustQuantityInCart = (productId, adjustment) => async (dispatch) 
         }
         try {
             if (adjustment === "inc") {
-                const res = await axios.post(`${api_url}/users//cart/quantity/increase`, payload, {
+                const res = await axios.post(`${api_url}/users/cart/quantity/increase`, payload, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
             }
 
             if (adjustment === "dec") {
-                const res = await axios.post(`${api_url}/users//cart/quantity/decrease`, payload, {
+                const res = await axios.post(`${api_url}/users/cart/quantity/decrease`, payload, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
             }
@@ -124,11 +126,12 @@ export const adjustQuantityInCart = (productId, adjustment) => async (dispatch) 
 
 export const removeFromCart = (productId, wishlist) => async (dispatch) => {
     if (token) {
-        const payload = { id: productId }
         try {
-            const res = await axios.delete(`${api_url}/users//cart`, payload, {
+            const res = await axios.delete(`${api_url}/users/cart/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
+
+            console.log(res);
             if (res.data) {
 
                 dispatch(fetchCartData());
@@ -145,7 +148,7 @@ export const fetchWishlistData = () => async (dispatch) => {
     if (token) {
         dispatch(getWishlistDataRequest());
         try {
-            const res = await axios.get(`${api_url}/users//wishlist`, {
+            const res = await axios.get(`${api_url}/users/wishlist`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
             const wishlistData = res.data.data

@@ -13,13 +13,13 @@ router.route("/tokens/refresh").post(refreshAccessToken);
 router.route("/logout").post(verifyJWT, logOutUser);
 
 router.route("/cart").post(verifyJWT, addToCart);
-router.route("/cart").delete(verifyJWT, removeFromCart);
+router.route("/cart/:productId").delete(verifyJWT, removeFromCart);
 router.route("/cart/quantity/increase").post(verifyJWT, increaseQuantity);
 router.route("/cart/quantity/decrease").post(verifyJWT, decreaseQuantity);
 router.route("/cart").get(verifyJWT, getUserCartData);
 
 router.route("/wishlist").post(verifyJWT, addToWishlist);
-router.route("/wishlist").delete(verifyJWT, removeFromWishlist);
+router.route("/wishlist/:productId").delete(verifyJWT, removeFromWishlist);
 router.route("/wishlist").get(verifyJWT, getUserWishlistData);
 
 router.route("/products/visited").post(verifyJWT, addVisitedProduct);

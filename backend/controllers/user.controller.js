@@ -189,11 +189,11 @@ const addToCart = asyncHandler(async (req, res) => {
     }
 })
 const removeFromCart = asyncHandler(async (req, res) => {
-    const { id } = req.body
+    const { productId } = req.params
 
     try {
         const user = await User.findById(req.user._id)
-        const itemIndex = user.cartItems.findIndex(item => item.productId == id)
+        const itemIndex = user.cartItems.findIndex(item => item.productId == productId)
 
         if (itemIndex > -1) {
             user.cartItems.splice(itemIndex, 1)
@@ -207,6 +207,7 @@ const removeFromCart = asyncHandler(async (req, res) => {
     }
 
 })
+
 
 const increaseQuantity = asyncHandler(async (req, res) => {
     const { id } = req.body
@@ -260,12 +261,13 @@ const addToWishlist = asyncHandler(async (req, res) => {
         throw new ApiError(500, `An error occurred while adding the item to the wishlist: ${error}`)
     }
 })
+
 const removeFromWishlist = asyncHandler(async (req, res) => {
-    const { id } = req.body
+    const { productId } = req.params
 
     try {
         const user = await User.findById(req.user._id)
-        const itemIndex = user.wishlistItems.indexOf(id)
+        const itemIndex = user.wishlistItems.indexOf(productId)
 
         if (itemIndex > -1) {
             user.wishlistItems.splice(itemIndex, 1)
@@ -278,6 +280,9 @@ const removeFromWishlist = asyncHandler(async (req, res) => {
         throw new ApiError(500, `An error occurred while removing the item from the wishlist: ${error}`)
     }
 })
+
+
+
 
 
 const getUserWishlistData = asyncHandler(async (req, res) => {
