@@ -1,6 +1,6 @@
 # Wood Fans - Where Comfort Meets Craftsmanship
 
-![Wood Fans Logo](./src/assets/logo.svg)
+![Wood Fans Logo](./frontend/src/assets/logo.svg)
 
 ## Table of Contents
 
