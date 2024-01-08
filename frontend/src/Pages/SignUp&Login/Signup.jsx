@@ -7,7 +7,7 @@ import { signUpNewUser } from "../../Redux/Auth/action";
 import { toast } from "react-toastify";
 import { api_url } from "../../../config";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 const Signup = ({ onClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +37,7 @@ const Signup = ({ onClick }) => {
       toast.info("Fill all the feild.");
     }
     await dispatch(signUpNewUser(email, password, name));
-    navigate("/login");
+    onClick();
   };
 
   return (

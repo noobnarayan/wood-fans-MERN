@@ -41,6 +41,7 @@ const signUpNewUser = (email, password, name) => async (dispatch) => {
 
 
           dispatch(signUpSuccess(`Welcome, ${name}!`));
+
      } catch (error) {
           let errorMessage = "Sign-up failed. Please check your information and try again";
           if (error.code === "auth/email-already-in-use") {
