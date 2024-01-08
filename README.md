@@ -65,7 +65,7 @@ Check out these snapshots showcasing Wood Fans on different devices.
 
 - # Login Page
 <div>
-    <img src="./public/screenshots/Login.png"/>
+    <img src="./frontend/public/screenshots/Login.png"/>
 </div>
 
 
