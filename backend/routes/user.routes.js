@@ -8,23 +8,22 @@ router.route("/register").post(registerUser);
 
 router.route("/login").post(loginUser);
 
-// Secured routes
-
+router.route("/").get(verifyJWT, getCurrentUser);
+router.route("/tokens/refresh").post(refreshAccessToken);
 router.route("/logout").post(verifyJWT, logOutUser);
-router.route("/refresh-token").post(refreshAccessToken);
-router.route("/get-user").get(verifyJWT, getCurrentUser);
-router.route("/add-to-cart").post(verifyJWT, addToCart);
-router.route("/add-to-wishlist").post(verifyJWT, addToWishlist);
-router.route("/remove-from-cart").post(verifyJWT, removeFromCart);
-router.route("/remove-from-wishlist").post(verifyJWT, removeFromWishlist);
-router.route("/increase-quantity").post(verifyJWT, increaseQuantity);
-router.route("/decrease-quantity").post(verifyJWT, decreaseQuantity);
-router.route("/get-cart-data").get(verifyJWT, getUserCartData);
-router.route("/get-wishlist-data").get(verifyJWT, getUserWishlistData);
 
+router.route("/cart").post(verifyJWT, addToCart);
+router.route("/cart").delete(verifyJWT, removeFromCart);
+router.route("/cart/quantity/increase").post(verifyJWT, increaseQuantity);
+router.route("/cart/quantity/decrease").post(verifyJWT, decreaseQuantity);
+router.route("/cart").get(verifyJWT, getUserCartData);
 
-router.route("/add-visited-products").post(verifyJWT, addVisitedProduct);
-router.route("/get-visited-products").get(verifyJWT, getVisitedProduct);
+router.route("/wishlist").post(verifyJWT, addToWishlist);
+router.route("/wishlist").delete(verifyJWT, removeFromWishlist);
+router.route("/wishlist").get(verifyJWT, getUserWishlistData);
+
+router.route("/products/visited").post(verifyJWT, addVisitedProduct);
+router.route("/products/visited").get(verifyJWT, getVisitedProduct);
 
 
 

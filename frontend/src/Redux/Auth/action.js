@@ -74,7 +74,7 @@ const getUserData = () => async (dispatch) => {
      const token = JSON.parse(localStorage.getItem("accessToken"));
      try {
           dispatch(getUserDataRequest())
-          const res = await axios.get(`${api_url}/users/get-user`, {
+          const res = await axios.get(`${api_url}/users/`, {
                headers: { Authorization: `Bearer ${token}` },
           });
 
