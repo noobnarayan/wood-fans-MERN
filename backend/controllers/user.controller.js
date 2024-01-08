@@ -2,7 +2,7 @@ const { asyncHandler } = require('../utils/asyncHandler.js');
 const { ApiError } = require('../utils/ApiError.js');
 const { User } = require('../models/user.model.js');
 const { ApiResponse } = require('../utils/ApiResponse.js');
-
+const { Order } = require('../models/orders.model.js')
 const jwt = require('jsonwebtoken');
 
 const generateAccessAndRefereshTokens = async (userId) => {
@@ -281,10 +281,6 @@ const removeFromWishlist = asyncHandler(async (req, res) => {
     }
 })
 
-
-
-
-
 const getUserWishlistData = asyncHandler(async (req, res) => {
     return res
         .status(200)
@@ -324,7 +320,23 @@ const getVisitedProduct = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, req.user.recentlyVisitedProducts, "Wishlist data fetch successfull"))
 });
 
+const createNewOrder = asyncHandler(async (req, res) => {
+    const { products, shippingAddress, paymentMethod } = req.body;
 
+    try {
+        const newOrder = await Order.create({
+            user: req.user._id,
+            products,
+            shippingAddress,
+            paymentMethod,
+            totalAmount: products.reduce((total, product) => total + product.priceAtOrder * product.quantity, 0)
+        });
+
+        res.status(201).json({ message: 'Order created successfully', order: newOrder });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating order', error });
+    }
+})
 
 
 
@@ -343,5 +355,6 @@ module.exports = {
     removeFromWishlist,
     getUserWishlistData,
     addVisitedProduct,
-    getVisitedProduct
+    getVisitedProduct,
+    createNewOrder
 }

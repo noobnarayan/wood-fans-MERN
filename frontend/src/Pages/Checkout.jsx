@@ -6,7 +6,6 @@ function Checkout() {
   const [component, setComponent] = useState("Shipping Details");
   const handleSubmit = () => {
     setComponent("Payment Method");
-    console.log("called");
   };
   return (
     <div className="flex justify-center bg-gray-300">

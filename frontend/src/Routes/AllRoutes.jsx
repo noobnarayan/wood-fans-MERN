@@ -8,17 +8,18 @@ import SingleProduct from "../Pages/SingleProduct";
 import UserProfile from "..//Pages/UserProfile";
 import OrderConfirmation from "../Components/OrderConfirmation";
 import Checkout from "../Pages/Checkout";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchData } from "../Redux/Products/action";
+import { useSelector } from "react-redux";
 
 const AllRoutes = () => {
   const { userData } = useSelector((store) => store.authReducer);
   const [authStatus, setAuthStatus] = useState(null);
+
   useEffect(() => {
     if (userData) {
       setAuthStatus(true);
     }
-  }, []);
+  }, [userData]);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />

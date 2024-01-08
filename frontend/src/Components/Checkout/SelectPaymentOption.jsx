@@ -38,8 +38,8 @@ function SelectPaymentOption() {
 
             setTimeout(() => {
               setShowThankYou(false);
-              navigate("/");
-            }, 5000);
+              navigate("/success");
+            }, 2000);
           },
           prefill: {
             name,

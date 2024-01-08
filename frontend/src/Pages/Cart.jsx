@@ -52,7 +52,16 @@ const cart = () => {
     }
   };
 
-  const toCheckout = () => navigate("/checkout");
+  const toCheckout = () => {
+    const products = cartData.map((item) => ({
+      product: item._id,
+      quantity: item.quantity,
+      priceAtOrder: item.price,
+    }));
+    localStorage.setItem("cart", JSON.stringify(products));
+    localStorage.setItem("cartTotal", cartTotal);
+    navigate("/checkout");
+  };
 
   return (
     <div className="w-full bg-gray-100">
