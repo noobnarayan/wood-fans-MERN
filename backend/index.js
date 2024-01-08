@@ -4,7 +4,7 @@ const { app } = require('./app.js');
 
 dotenv.config({ path: './.env' });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
 connectDB()
     .then(() => {
@@ -15,6 +15,3 @@ connectDB()
     .catch((error) => {
         console.log(`DB Connection failed: ${error}`);
     });
-
-
-module.exports = app

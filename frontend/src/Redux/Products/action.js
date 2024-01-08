@@ -24,6 +24,7 @@ export const fetchData = () => async (dispatch) => {
         const response = await axios.get(
             `${api_url}/products`
         );
+        console.log(`${api_url}/products`);
         dispatch(getDataSuccess(response.data.data));
 
     } catch (error) {

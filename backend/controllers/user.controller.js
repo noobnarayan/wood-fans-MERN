@@ -339,7 +339,9 @@ const createNewOrder = asyncHandler(async (req, res) => {
 })
 
 
-
+const ping = (req, res) => {
+    res.send("API is working")
+}
 module.exports = {
     registerUser,
     loginUser,
@@ -356,5 +358,6 @@ module.exports = {
     getUserWishlistData,
     addVisitedProduct,
     getVisitedProduct,
-    createNewOrder
+    createNewOrder,
+    ping
 }
