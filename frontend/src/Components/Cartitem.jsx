@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { auth } from "../Services/firebaseConfig";
 import { useDispatch } from "react-redux";
 import { adjustQuantityInCart } from "../Redux/Products/action";
 import { fetchSingleProductData } from "./Common/common";
@@ -9,7 +8,6 @@ const Cartitem = ({ product, btnOnClick }) => {
   const [itemData, setItemData] = useState({});
   const [mainImg, setMainImg] = useState([]);
   const dispatch = useDispatch();
-  const userId = auth?.currentUser?.uid;
   useEffect(() => {
     fetchSingleProductData(productId, setMainImg, setItemData);
   }, [productId]);
@@ -40,7 +38,7 @@ const Cartitem = ({ product, btnOnClick }) => {
             <div className="flex flex-wrap gap-2 py-5">
               <button
                 onClick={() => {
-                  btnOnClick("Remove", productId, userId);
+                  btnOnClick("Remove", productId);
                 }}
                 className="text-xs bg-primary-yellow p-1 rounded-sm cursor-pointer hover:text-white"
               >
@@ -48,7 +46,7 @@ const Cartitem = ({ product, btnOnClick }) => {
               </button>
               <button
                 onClick={() => {
-                  btnOnClick("Wishlist", productId, userId);
+                  btnOnClick("Wishlist", productId);
                 }}
                 className="text-xs bg-primary-yellow p-1 rounded-sm text-white cursor-pointer hover:text-black"
               >

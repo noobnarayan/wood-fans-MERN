@@ -1,5 +1,4 @@
 import { api_url } from '../../../config';
-import { storeDB, collection, writeBatch } from '../../Services/firebaseConfig'
 import { DATA_GET_REQUEST, DATA_GET_SUCCESS, DATA_GET_FAILURE, CART_GET_REQUEST, CART_GET_SUCCESS, CART_GET_FAILURE, WISHLIST_GET_REQUEST, WISHLIST_GET_SUCCESS, WISHLIST_GET_FAILURE } from './actionTypes';
 import axios from "axios"
 

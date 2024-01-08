@@ -1,7 +1,3 @@
-// Import 
-import { auth, googleProvider, storeDB, facebookProvider } from '../../Services/firebaseConfig'
-import { signInWithPopup } from 'firebase/auth'
-import { collection, setDoc, doc, getDoc } from 'firebase/firestore'
 import { FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_SUCCESS, GET_USER_DATA_FAILURE, GET_USER_DATA_REQUEST, GET_USER_DATA_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS } from './actionType'
 import axios from 'axios'
 import { api_url } from "../../../config.js"
@@ -89,47 +85,9 @@ const getUserData = () => async (dispatch) => {
 }
 
 
-const loginWithGoogle = (onRedirect) => async (dispatch) => {
-     try {
-          dispatch(signUpRequest());
-
-          const result = await signInWithPopup(auth, googleProvider);
-
-          // Assuming you have a 'users' collection in Firestore
-          const usersCollection = collection(storeDB, 'users');
-          const userId = result.user.uid;
-
-          const userDocRef = doc(usersCollection, userId);
-
-          // Check if the user exists in Firestore
-          const userDocSnapshot = await getDoc(userDocRef);
-
-          if (!userDocSnapshot.exists()) {
-               // If the user doesn't exist, add their data
-               await setDoc(userDocRef, {
-                    name: result.user.displayName,
-                    email: result.user.email,
-                    cart: [],
-                    wishlist: [],
-                    order: [],
-               });
-          }
-          dispatch(signUpSuccess(`Welcome, ${result.user.displayName}!`));
-          onRedirect()
-
-     } catch (error) {
-          let errorMessage = "Sign-up failed. Please check your information and try again";
-          if (error.code === "auth/email-already-in-use") {
-               errorMessage = "The email address is already in use by another account. Please use a different email";
-          }
-          dispatch(signUpFailure(errorMessage));
-
-     }
-};
 
 export {
      loginWithEmailAndPassword,
-     loginWithGoogle,
      signUpNewUser,
      getUserData
 }
