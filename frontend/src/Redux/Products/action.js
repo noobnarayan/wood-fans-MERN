@@ -10,18 +10,18 @@ export const getDataSuccess = (data) => ({ type: DATA_GET_SUCCESS, payload: data
 export const getDataFailure = (error) => ({ type: DATA_GET_FAILURE, payload: error });
 
 export const fetchData = () => async (dispatch) => {
-    if (token) {
-        dispatch(getDataRequest());
-        try {
-            const response = await axios.get(
-                `${api_url}/products`
-            );
-            dispatch(getDataSuccess(response.data.data));
 
-        } catch (error) {
-            dispatch(getDataFailure(error));
-        }
+    dispatch(getDataRequest());
+    try {
+        const response = await axios.get(
+            `${api_url}/products`
+        );
+        dispatch(getDataSuccess(response.data.data));
+
+    } catch (error) {
+        dispatch(getDataFailure(error));
     }
+
 
 };
 

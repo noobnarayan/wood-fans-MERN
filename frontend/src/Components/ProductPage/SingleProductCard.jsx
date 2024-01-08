@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useId, useRef } from "react";
 import Button from "../Common/Button";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,10 @@ function SingleProductCard({ product, redirectToDetail }) {
   const userId = useRef(null);
 
   useEffect(() => {
-    userId.current = userData?._id;
+    dispatch(fetchWishlistData());
+    if (userData) {
+      userId.current = userData._id;
+    }
   }, [userData]);
 
   useEffect(() => {
@@ -36,9 +39,11 @@ function SingleProductCard({ product, redirectToDetail }) {
   const changeWishListState = () => {
     setWishListClicked((pre) => !pre);
   };
-  const handleAddToCart = (productId) => {
+  const handleAddToCart = async (productId) => {
+    await dispatch(getUserData());
     if (userId.current) {
       dispatch(addToCart(productId));
+
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 1000);
     } else {
@@ -46,7 +51,8 @@ function SingleProductCard({ product, redirectToDetail }) {
     }
   };
 
-  const handleAddToWishList = (productId, userId) => {
+  const handleAddToWishList = async (productId, userId) => {
+    await dispatch(getUserData());
     if (userId.current) {
       if (wishListClicked) {
         dispatch(removeFromWishlist(productId, userId));
@@ -58,11 +64,6 @@ function SingleProductCard({ product, redirectToDetail }) {
       navigate("/login");
     }
   };
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchWishlistData(userId));
-    }
-  }, [userId, dispatch]);
 
   useEffect(() => {
     if (!loading) {

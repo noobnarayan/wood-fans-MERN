@@ -8,7 +8,8 @@ import SingleProduct from "../Pages/SingleProduct";
 import UserProfile from "..//Pages/UserProfile";
 import OrderConfirmation from "../Components/OrderConfirmation";
 import Checkout from "../Pages/Checkout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchData } from "../Redux/Products/action";
 
 const AllRoutes = () => {
   const { userData } = useSelector((store) => store.authReducer);
@@ -17,7 +18,7 @@ const AllRoutes = () => {
     if (userData) {
       setAuthStatus(true);
     }
-  }, [userData]);
+  }, []);
   return (
     <Routes>
       <Route path="/" element={<Home />} />

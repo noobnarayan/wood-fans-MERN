@@ -20,7 +20,6 @@ import ImageColumn from "../Components/Common/ImageColumn";
 import ClientsReviews from "../Components/Common/ClientsReviews";
 import RandomProducts from "../Components/Common/RandomProducts";
 import { useEffect } from "react";
-import { storeDB, getDoc, auth, doc } from "../Services/firebaseConfig";
 import { useState } from "react";
 import PopupMessage from "../Components/Common/PopupMessage";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,7 +36,9 @@ const SingleProduct = () => {
   const userId = useRef(null);
 
   useEffect(() => {
-    userId.current = userData?._id;
+    if (userData) {
+      userId.current = userData._id;
+    }
   }, [userData]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,12 +52,12 @@ const SingleProduct = () => {
     if (userId.current) {
       if (buttonType === "add to cart") {
         dispatch(addToCart(productId));
-        dispatch(fetchCartData(userId));
+        dispatch(fetchCartData());
         setShowPopup(true);
         setTimeout(() => setShowPopup(false), 1000);
       } else {
         dispatch(addToCart(productId));
-        dispatch(fetchCartData(userId));
+        dispatch(fetchCartData());
         navigate("/cart");
       }
     } else {
