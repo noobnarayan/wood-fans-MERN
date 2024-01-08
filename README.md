@@ -59,7 +59,7 @@ Check out these snapshots showcasing Wood Fans on different devices.
 
 - # Home Page
 <div>
-    <img src="./public/screenshots/homePage.png"/>
+    <img src="./frontend/public/screenshots/homePage.png"/>
 </div>
 
 
@@ -71,51 +71,51 @@ Check out these snapshots showcasing Wood Fans on different devices.
 
 - # Signup Page
 <div>
-    <img src="./public/screenshots/signup.png"/>
+    <img src="./frontend/public/screenshots/signup.png"/>
 </div>
 
 
 - # User Profile Page
 <div>
-    <img src="./public/screenshots/userProfile.jpg"/>
+    <img src="./frontend/public/screenshots/userProfile.jpg"/>
 </div>
 
 
 - # Product Page
 <div>
-    <img src="./public/screenshots/product.png"/>
+    <img src="./frontend/public/screenshots/product.png"/>
 </div>
 
 
 - # Product Detail Page
 <div>
-    <img src="./public/screenshots/productDetail.png"/>
+    <img src="./frontend/public/screenshots/productDetail.png"/>
 </div>
 
 
 - # Cart Page
 <div>
-    <img src="./public/screenshots/cartEmpty.jpg"/>
-    <img src="./public/screenshots/cart.jpg"/>
+    <img src="./frontend/public/screenshots/cartEmpty.jpg"/>
+    <img src="./frontend/public/screenshots/cart.jpg"/>
 </div>
 
 
 - # Delivery Detail Page
 <div>
-    <img src="./public/screenshots/checkout.png"/>
+    <img src="./frontend/public/screenshots/checkout.png"/>
 </div>
 
 
 - # Payment Page
 <div>
-    <img src="./public/screenshots/payment.png"/>
-    <img src="./public/screenshots/payment2.png"/>
+    <img src="./frontend/public/screenshots/payment.png"/>
+    <img src="./frontend/public/screenshots/payment2.png"/>
 </div>
 
 
 - # Order Successful Page
 <div>
-    <img src="./public/screenshots/confirmation.png"/>
+    <img src="./frontend/public/screenshots/confirmation.png"/>
 </div>
 
 ## Contributors
